@@ -1,0 +1,101 @@
+<?php
+class mo_province extends CI_Model {
+	public function __construct() {
+		parent::__construct();
+	}
+	// ============== Datagrid User's Model Section
+	function fnprovinceCount() {
+		$this->db->select("count(*) as selectCount");
+		$vResult = $this->db->get(t_province)->result();
+		if($vResult) {
+			return $vResult[0];
+		} else {
+			return false;
+		}
+	}
+	
+	function fnprovinceData($pprovinceKeyword,$pOffset,$pRows,$pSort,$pOrder) {
+		
+		$this->db->like(array("f_province_id"=>$pprovinceKeyword));
+		
+		$this->db->order_by($pSort,$pOrder);
+		$this->db->limit($pRows,$pOffset);
+	
+		$vResult = $this->db->get(t_province)->result();
+		$vArrayTemp = array();
+		$vItems = array();
+		foreach($vResult as $vRow):
+           
+			$vArrayTemp['f_province_id'] = $vRow->f_province_id;		
+           
+			$vArrayTemp['f_province_name'] = $vRow->f_province_name;		
+           	
+		array_push($vItems,$vArrayTemp);
+		endforeach;
+		return $vItems;
+	}
+	
+	
+	
+	function fnCreateprovince($pData) {
+		$vData = array(
+           
+			'f_province_name'=>$pData['vf_province_name'],					
+           
+		);
+		$vResult = $this->db->insert('t_province',$vData);
+		if($vResult) {
+			echo json_encode(array('success'=>true));
+		} else {
+			echo json_encode(array('msg'=>'Some errors occured.'));
+		}
+	}
+	
+	function fnprovinceDelete($pDelprovinceId) {
+		
+		$vResult = $this->db->where('f_province_id',$pDelprovinceId)->delete('t_province');
+	
+		
+		if($vResult) {
+			echo json_encode(array('success'=>true));
+		} else {
+			echo json_encode(array('msg'=>'Some errors occured.'));
+		}
+	}
+	
+	function fnprovinceRow($pprovinceId) {
+	
+		$this->db->where('f_province_id',$pprovinceId);
+		
+		$vResult = $this->db->get(t_province)->result();
+		$vRow = $vResult[0];
+           
+			$vArrayTemp['f_province_id'] = $vRow->f_province_id;
+           
+			$vArrayTemp['f_province_name'] = $vRow->f_province_name;
+           		
+		
+		echo json_encode($vArrayTemp);
+		
+	}	
+
+	function fnUpdateprovince($pprovinceId,$pData) {
+		$vData = array(
+		           
+			'f_province_name'=>$pData['vf_province_name'],					
+           			
+		);
+	
+		$vResult = $this->db->where('f_province_id',$pprovinceId)->update('t_province',$vData);
+	
+		
+		if($vResult) {
+			echo json_encode(array('success'=>true));
+		} else {
+			echo json_encode(array('msg'=>'Some errors occured.'));
+		}
+	}
+	
+}
+?>
+

@@ -1,0 +1,79 @@
+body{
+	font-family: Tahoma;	background-image: url(../images/backg.jpg);    text-align: center; 
+}
+#header {
+	position: relative;
+	background-image: url(../images/bg_login.png);
+	background-repeat: no-repeat;
+	margin-right: auto;
+	margin-left: auto;
+	width: 825px;    height:606px;
+
+	padding-top: 110px;
+	text-align: left;
+
+}#log {	position: relative;	margin-right: auto;	margin-left: auto;	padding-top: 50px;	text-align: left;}
+#content {
+	margin-left: 230px;
+	padding: 20px 10px 0 0;
+}
+#content p {
+	font-size: 75%;
+	line-height: 1.8em;
+	padding-left: 2em;
+}
+
+a:link,a:visited {
+  color:#265180;
+}
+a:hover {
+	color: #FF6600;
+	text-decoration:none;
+}
+h2 {   
+	font: normal 120% Georgia;
+	line-height: 200%;
+	color: #265180;
+	background-color: transparent;
+	border-bottom: 1px dotted #265180;
+
+}
+table {
+	font-family: Tahoma; 
+	font-size: 8pt;
+	color: #FFFFFF;
+	margin: 10px 0px;
+}
+th{
+	color: #FFFFFF;
+	font-size: 7pt;
+	text-transform: uppercase;
+	text-align: center;
+	padding: 0.5em;
+	background-color: #265180;
+}
+td{
+	padding: 0.5em;
+	vertical-align: top;
+
+}
+input,textarea,select{
+	font-family: Tahoma; 
+	font-size: 8pt;
+}
+#paging{
+	font-family: Tahoma; 
+	font-size: 8pt; 
+}
+#footer{
+	font-size: 70%;
+	color: #FFFFFF;
+	background-color: #265180;
+
+	position: relative;
+	margin-right: auto;
+	margin-left: auto;
+	border: 2px solid #265180;
+	text-align: center;
+    height:50px;
+}

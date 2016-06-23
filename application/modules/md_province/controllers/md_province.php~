@@ -1,0 +1,88 @@
+<?php
+class md_Province extends MX_Controller {
+	public function __construct() {
+		parent::__construct();
+		$this->load->model('mo_Province');
+	}
+	function index() {
+		$this->fnProvince();
+	}
+	function fnProvince()	{
+		$this->load->view('vw_Province');
+	}
+	// ======================================== 'Datagrid User Section'
+	function fnProvinceData() {
+		$vPage=$this->input->post('page');
+		$vRows=$this->input->post('rows');
+		$vProvinceKeyword=$this->input->post('ProvinceKeyword');
+		$vSort=$this->input->post('sort');
+		$vOrder=$this->input->post('order');
+		if(!$vPage) {
+			$vPage=1;
+		}
+		if(!$vRows) {
+			$vRows=20;
+		}
+		if(!$vcustomerKeyword) {
+			$vcustomerKeyword='';
+		}
+		if(!$vSort) {
+		
+		$vSort='f_province_id';
+		
+		}
+		if(!$vOrder) {
+			$vOrder='DESC';
+		}
+		$vOffset=($vPage-1)*$vRows;
+		$vResult=array();
+		$vRs=$this->mo_Province->fnProvinceCount($vProvinceKeyword);
+		$vResult["total"]=$vRs->selectCount;
+		$vResult["rows"]=$this->mo_Province->fnProvinceData($vProvinceKeyword,$vOffset,$vRows,$vSort,$vOrder);
+		echo json_encode($vResult);
+	}	
+	function fnProvinceAdd() {
+		$this->load->view('Province_add_main');
+	}
+	
+	function fnProvinceCreate() {
+		$vData = array(
+         		
+			'vf_province_id'=>$this->input->post('f_province_id'),
+       		
+			'vf_province_name'=>$this->input->post('f_province_name'),
+       				
+		);
+		
+		
+	$this->mo_Province->fnCreateProvince($vData);
+	}
+	function fnProvinceEdit($pProvinceId) {
+		$vData['vProvinceId'] = $pProvinceId;
+		$this->load->view('Province_add_main',$vData);
+	}
+	function fnProvinceRow($pProvinceId) {
+		$this->mo_Province->fnProvinceRow($pProvinceId);
+	}
+	
+	function fnProvinceDelete() {
+		$vDelProvinceId = intval($_POST['Id']);
+		$this->mo_Province->fnProvinceDelete($vDelProvinceId);
+	}
+	
+	function fnProvinceUpdate($pProvinceId) {
+		$vData = array(
+		
+         		
+			'vf_province_id'=>$this->input->post('f_province_id'),
+       		
+			'vf_province_name'=>$this->input->post('f_province_name'),
+       		
+
+		);
+		$this->mo_Province->fnUpdateProvince($pProvinceId,$vData);
+	}
+}
+?>
+
+	   

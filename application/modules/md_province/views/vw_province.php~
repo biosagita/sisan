@@ -1,0 +1,114 @@
+<div id="15_tlbprovince" style="padding:5px;">
+	<div style="float:left;">
+			<a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-add" plain="true" onclick="fnAddprovince_15()">Add</a>
+			<a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-edit" plain="true" onclick="fnEditprovince_15()">Edit</a>
+			<a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-remove" plain="true" onclick="fnDeleteprovince_15()">Delete</a> 
+			
+	</div>
+	<div style="float:right;clear:right;">
+		<span>Search:</span>
+		<input id="15_txtprovince" style="width:175px;line-height:26px;border:1px solid #CCCCCC; padding:3px">
+		<a href="javascript:void(0)" class="easyui-linkbutton" onclick="fnSearch_15()">Find</a>
+	</div>
+</div>
+<table id="15_dtgprovince" class="easyui-datagrid" data-options="title:'Data Province',url:'<?php echo base_url(); ?>index.php/md_province/fnprovinceData/',toolbar:'#15_tlbprovince',rownumbers:true,border:false,singleSelect:true,striped:true,fit:true,pagination:true,pageSize:20,pageList:[20,50,100,500]">
+<thead>
+	<tr>
+           
+		   <th data-options="field:'f_province_id',title:'<b>Id</b>',hidden:true,width:40,sortable:true" halign="center"></th>
+           
+		   <th data-options="field:'f_province_name',title:'<b>Name</b>',width:250,sortable:true" halign="center"></th>
+           	
+
+   </tr>
+</thead>
+</table>
+<div id="15_dlgprovince" class="easyui-dialog" data-options="cache: false, resizable: false, closable: true, modal: true, onResize: function(width, height){if(height!='auto') fnResize_15(width, height) }" closed="true" style="background-color:#F8F8F8;">  
+    <div id="15_divWait" align="left" style="padding:10px; height:200px;"><img src="http://localhost/etnisys/images/loading.gif" /> &nbsp;Loading...</div>
+    <iframe name="15_fraprovince" id="15_fraprovince" frameborder="0" style="background-color:#F8F8F8"></iframe>
+</div>
+<script type="text/javascript">
+function fnSearch_15() {
+	$('#15_dtgprovince').datagrid('load',{
+		provinceKeyword: $('#15_txtprovince').val()
+	});
+}
+function fnResize_15(width,height) {
+	$('#15_fraprovince').width(width-14);
+	$('#15_fraprovince').height(height-40);
+}
+function fnResize_15(width,height) {
+	$('#15_fraprovince').width(width-14);
+	$('#15_fraprovince').height(height-40);
+}
+function fnAddprovince_15() {
+	$('#15_dlgprovince').dialog({
+		title: 'Input Data province',
+		width: 510,
+		height: 190
+	});
+	$('#15_divWait').show();
+	$('#15_fraprovince').hide();
+	$('#15_fraprovince').attr('src','<?php echo base_url(); ?>index.php/md_province/fnprovinceAdd');
+	$('#15_dlgprovince').window('open');
+}
+function fnEditprovince_15() {
+	var singleRow = $('#15_dtgprovince').datagrid('getSelected');
+	if(singleRow) {
+		$('#15_dlgprovince').dialog({
+			title: 'Edit Data Province',
+			width: 510,
+			height: 190
+		});
+		$('#15_divWait').show();
+		$('#15_fraprovince').hide();
+						
+		$('#15_fraprovince').attr('src','<?php echo base_url(); ?>index.php/md_province/fnprovinceEdit/'+singleRow.f_province_id);
+				
+
+		$('#15_dlgprovince').window('open');
+	} else {
+		alert('Select which province data you want to edit.');
+	}
+}
+function fnSelectprovince_15() {
+	var singleRow = $('#15_dtgprovince').datagrid('getSelected');
+	if(singleRow) {
+		var vprovinceId = singleRow.province_uid;
+		var vprovinceLogin = singleRow.province_ulogin;
+		$('#15_dlgprovince').dialog({
+			title: 'Select province for '+vprovinceLogin,
+			width: 365,
+			height: 290
+		});
+		$('#15_divWait').show();
+		$('#15_fraprovince').hide();
+				
+		$('#15_fraprovince').attr('src','<?php echo base_url(); ?>index.php/md_province/fnprovinceChoose/'+vf_province_id);
+				
+		$('#15_dlgprovince').window('open');
+	} else {
+		alert('Select Province Datagrid row first.');
+	}
+}
+function fnDeleteprovince_15() {
+	var singleRow = $('#15_dtgprovince').datagrid('getSelected');
+	if (singleRow) {
+		$.messager.confirm('Confirm','Are you sure you want to delete this data?',function(res) {
+			if (res) {
+				
+				$.post('<?php echo base_url(); ?>index.php/md_province/fnprovinceDelete/',{Id:singleRow.f_province_id},function(result) {
+				
+					if (result.success) {
+						$('#15_dtgprovince').datagrid('reload');
+					} else {
+						$.messager.show({title:'Error',msg:result.msg});
+					}
+				},'json');
+			}
+		});
+	} else {
+		alert('Select the data that you want to Delete !.');
+	}
+}
+</script>

@@ -1,0 +1,459 @@
+<?php
+class mo_counter extends CI_Model {
+	public function __construct() {
+		parent::__construct();
+	}
+	// ============== Datagrid User's Model Section
+	function fnqueueListCount() {
+		$GroupLayanan= $this->session->userdata('sIdGroupLayanan');	
+		$currentDate=date('Ymd');	
+	
+		$this->db->where(array("status_transaksi"=>"0","tanggal_transaksi"=>$currentDate,"id_group_layanan"=>$GroupLayanan));
+		$this->db->select("count(*) as selectCount");
+		$this->db->from('transaksi as a');	
+		$vResult = $this->db->get()->result();
+		if($vResult) {
+			return $vResult[0];
+		} else {
+			return false;
+		}
+	}
+	
+	function fnqueueListData($pcounterKeyword,$pOffset,$pRows,$pSort,$pOrder) {
+		$GroupLayanan= $this->session->userdata('sIdGroupLayanan');	
+		$currentDate=date('Ymd');	
+		$this->db->where(array("status_transaksi"=>"0","tanggal_transaksi"=>$currentDate,"a.id_group_layanan"=>$GroupLayanan));
+		
+		$this->db->order_by($pSort,$pOrder);
+		$this->db->limit($pRows,$pOffset);
+		$this->db->join('layanan as b', 'a.id_layanan=b.id_layanan','Left');	
+		
+		$this->db->from('transaksi as a');	
+		$vResult = $this->db->get()->result();
+		$vArrayTemp = array();
+		$vItems = array();
+		foreach($vResult as $vRow):
+           
+			$vArrayTemp['id'] = $vRow->id_transaksi;		
+			$vArrayTemp['type'] = $vRow->nama_layanan;		
+			$vArrayTemp['queue_no'] = $vRow->no_ticket;		
+			$vArrayTemp['time'] = $vRow->waktu_ambil;		
+           	
+		array_push($vItems,$vArrayTemp);
+		endforeach;
+		return $vItems;
+	}
+//=========Skip List===========
+	function fnskipListCount() {
+		$GroupLayanan= $this->session->userdata('sIdGroupLayanan');	
+		$currentDate=date('Ymd');	
+	
+		$this->db->where(array("status_transaksi"=>"3","tanggal_transaksi"=>$currentDate,"id_group_layanan"=>$GroupLayanan));
+		$this->db->select("count(*) as selectCount");
+		$this->db->from('transaksi as a');	
+		$vResult = $this->db->get()->result();
+		if($vResult) {
+			return $vResult[0];
+		} else {
+			return false;
+		}
+	}
+	
+	function fnskipListData($pcounterKeyword,$pOffset,$pRows,$pSort,$pOrder) {
+		$GroupLayanan= $this->session->userdata('sIdGroupLayanan');		
+		$currentDate=date('Ymd');	
+		$this->db->where(array("status_transaksi"=>"3","tanggal_transaksi"=>$currentDate,"a.id_group_layanan"=>$GroupLayanan));
+		
+		$this->db->order_by($pSort,$pOrder);
+		$this->db->limit($pRows,$pOffset);
+		$this->db->join('layanan as b', 'a.id_layanan=b.id_layanan','Left');	
+		
+		$this->db->from('transaksi as a');	
+		$vResult = $this->db->get()->result();
+		$vArrayTemp = array();
+		$vItems = array();
+		foreach($vResult as $vRow):
+           
+			$vArrayTemp['id'] = $vRow->id_transaksi;		
+			$vArrayTemp['type'] = $vRow->nama_layanan;		
+			$vArrayTemp['queue_no'] = $vRow->no_ticket;		
+			$vArrayTemp['time'] = $vRow->waktu_ambil;		
+           	
+		array_push($vItems,$vArrayTemp);
+		endforeach;
+		return $vItems;
+	}	
+//=========Skip List===========
+	function fnfinishListCount() {
+		$GroupLayanan= $this->session->userdata('sIdGroupLayanan');	
+		$currentDate=date('Ymd');	
+		$this->db->where(array("status_transaksi"=>"5","tanggal_transaksi"=>$currentDate,"id_group_layanan"=>$GroupLayanan));
+		$this->db->select("count(*) as selectCount");
+		$this->db->from('transaksi as a');	
+		$vResult = $this->db->get()->result();
+		if($vResult) {
+			return $vResult[0];
+		} else {
+			return false;
+		}
+	}
+	
+	function fnfinishListData($pcounterKeyword,$pOffset,$pRows,$pSort,$pOrder) {
+		$GroupLayanan= $this->session->userdata('sIdGroupLayanan');	
+		$currentDate=date('Ymd');	
+		$this->db->where(array("status_transaksi"=>"5","tanggal_transaksi"=>$currentDate,"a.id_group_layanan"=>$GroupLayanan));
+		
+		$this->db->order_by($pSort,$pOrder);
+		$this->db->limit($pRows,$pOffset);
+		$this->db->join('layanan as b', 'a.id_layanan=b.id_layanan','Left');	
+		
+		$this->db->from('transaksi as a');	
+		$vResult = $this->db->get()->result();
+		$vArrayTemp = array();
+		$vItems = array();
+		foreach($vResult as $vRow):
+           
+			$vArrayTemp['id'] = $vRow->id_transaksi;		
+			$vArrayTemp['type'] = $vRow->nama_layanan;		
+			$vArrayTemp['queue_no'] = $vRow->no_ticket;		
+			$vArrayTemp['time'] = $vRow->waktu_ambil;		
+           	
+		array_push($vItems,$vArrayTemp);
+		endforeach;
+		return $vItems;
+	}
+	
+	function fnNext() {
+	$tanggal_transaksi=date('Ymd');
+	$waktu_panggil=date("H:i:s");
+	
+	$GroupLayanan= $this->session->userdata('sIdGroupLayanan');		
+	$Loket= $this->session->userdata('sIdLoket');	
+
+	$cal_next=$this->db->query("Select id_transaksi,no_ticket,nama_layanan,waktu_ambil from transaksi as a left join layanan as b ON a.id_layanan=b.id_layanan where status_transaksi='0' and a.id_group_layanan='$GroupLayanan' and tanggal_transaksi='$tanggal_transaksi'order by id_transaksi asc  ");
+	$vRow_next = $cal_next->row_array(); 
+	$id_transaksi=$vRow_next['id_transaksi'];
+	$next_id=$vRow_next['no_ticket'];	
+	$transaction=$vRow_next['nama_layanan'];
+	$waktu_ambil=$vRow_next['waktu_ambil'];
+
+	$ct_id_lay=$this->db->query("Select tanggal_transaksi,no_ticket,group_layanan.nama_group_layanan,waktu_panggil,id_layanan,transaksi.id_group_layanan from transaksi inner join group_layanan ON transaksi.id_group_layanan=group_layanan.id_group_layanan where status_transaksi='2' and id_loket='$Loket' and tanggal_transaksi='$tanggal_transaksi'order by id_transaksi desc ");
+	$_countmk3 = $ct_id_lay->row_array(); 
+
+	$ct_id_skip=$this->db->query("Select id_transaksi from transaksi where status_transaksi='2' and tanggal_transaksi='$tanggal_transaksi'order by id_transaksi asc ");
+	$id_skip = $ct_id_skip->row_array(); 
+	$skip_id=$id_skip['id_transaksi'];
+
+	
+    //cek Layanan Forward-------------------------------------------
+    $data_fwd=$this->db->query("Select id_group_layanan,id_layanan_forward from layanan where id_layanan='$_countmk3[id_layanan]'");
+	$data_fw = $data_fwd->row_array(); 
+
+	
+    $sql_cek_fw_group=$this->db->query("Select id_group_layanan from layanan where id_layanan='$data_fw[id_layanan_forward]'");
+	$data_fw_group = $sql_cek_fw_group->row_array(); 
+
+
+			$vArrayTemp['id_transaksi'] = $id_transaksi;		           			
+
+			$vArrayTemp['no_tiket'] = $next_id;		           			
+			$vArrayTemp['transaction'] = $transaction;		           			
+			$vArrayTemp['start'] = $waktu_ambil;		           						
+		echo json_encode($vArrayTemp);
+
+	  $sql=$this->db->query("UPDATE transaksi set  status_transaksi='1',waktu_panggil='$waktu_panggil',id_loket='$Loket' where no_ticket='$next_id' and id_group_layanan='$GroupLayanan' and tanggal_transaksi='$tanggal_transaksi'");
+
+	if ($_countmk3['tanggal_transaksi'] > '0')
+	{
+	  $sql=$this->db->query("INSERT INTO transaksi (tanggal_transaksi,waktu_ambil,no_ticket,id_layanan,id_group_layanan,status_transaksi) 
+	  VALUES ('$_countmk3[tanggal_transaksi]', '$waktu_panggil','$_countmk3[no_ticket]', '$data_fw[id_layanan_forward]','$data_fw_group[id_group_layanan]','0')");
+	  $sql=$this->db->query("UPDATE transaksi set  status_transaksi='5' where no_ticket='$_countmk3[no_ticket]' and id_loket='$Loket' and tanggal_transaksi='$tanggal_transaksi' ");
+	}
+	else{
+	//close cek layanan forward------------------------------------------------------------------------------
+    }
+	
+	}
+
+	function fnCreateRegVisitor($pData) {
+		$vData = array(
+			'ktp'=>$pData['vNoKTP'],					           
+			'no_hp'=>$pData['vNoHP'],					           
+			'nama_visitor'=>$pData['vNamaVisitor'],					           
+			'id_transaksi'=>$pData['vIdTransaksi'],					           			
+		);
+		$vResult = $this->db->insert('visitor',$vData);
+		if($vResult) {
+			echo json_encode(array('success'=>true));
+		} else {
+			echo json_encode(array('msg'=>'Some errors occured.'));
+		}
+	}
+
+	function fnRecall() {
+	$tanggal_transaksi=date('Ymd');
+	$waktu_panggil=date("H:i:s");
+	
+	$GroupLayanan= $this->session->userdata('sIdGroupLayanan');		
+	$Loket= $this->session->userdata('sIdLoket');	
+
+
+	$ct_id_lay=$this->db->query("Select tanggal_transaksi,no_ticket,group_layanan.nama_group_layanan,waktu_panggil,id_layanan,transaksi.id_group_layanan from transaksi inner join group_layanan ON transaksi.id_group_layanan=group_layanan.id_group_layanan where status_transaksi='2' and id_loket='$Loket' and tanggal_transaksi='$tanggal_transaksi'order by id_transaksi desc ");
+	$_countmk3 = $ct_id_lay->row_array(); 
+	
+		$sql=$this->db->query("UPDATE transaksi set  status_transaksi='1' where no_ticket='$_countmk3[no_ticket]' and id_loket='$Loket' and tanggal_transaksi='$tanggal_transaksi'");  
+		
+	}
+
+	function fnSkip() {
+	$tanggal_transaksi=date('Ymd');
+	$waktu_panggil=date("H:i:s");
+	
+	$GroupLayanan= $this->session->userdata('sIdGroupLayanan');		
+	$Loket= $this->session->userdata('sIdLoket');	
+	$ct_id_lay=$this->db->query("Select tanggal_transaksi,no_ticket,group_layanan.nama_group_layanan,waktu_panggil,id_layanan,transaksi.id_group_layanan from transaksi inner join group_layanan ON transaksi.id_group_layanan=group_layanan.id_group_layanan where status_transaksi='2' and id_loket='$Loket' and tanggal_transaksi='$tanggal_transaksi'order by id_transaksi desc ");
+	$_countmk3 = $ct_id_lay->row_array(); 
+	
+	$sql=$this->db->query("UPDATE transaksi set  status_transaksi='3' where no_ticket='$_countmk3[no_ticket]' and id_loket='$Loket' and tanggal_transaksi='$tanggal_transaksi'");
+	  
+	}
+	
+	function fnUndo($vIdTransaksi) {
+	  $sql=$this->db->query("UPDATE transaksi set  status_transaksi='0', id_loket='' where id_transaksi='$vIdTransaksi' ");
+	}
+
+
+	function fnforward1() {
+		
+	$tanggal_transaksi=date('Ymd');
+	$waktu_panggil=date("H:i:s");
+	
+	$GroupLayanan= $this->session->userdata('sIdGroupLayanan');		
+	$Loket= $this->session->userdata('sIdLoket');	
+
+	$cal_next=$this->db->query("Select id_transaksi,no_ticket,nama_layanan,waktu_ambil from transaksi as a left join layanan as b ON a.id_layanan=b.id_layanan where status_transaksi='0' and a.id_group_layanan='$GroupLayanan' and tanggal_transaksi='$tanggal_transaksi'order by id_transaksi asc  ");
+	$vRow_next = $cal_next->row_array(); 
+	$id_transaksi=$vRow_next['id_transaksi'];
+	$next_id=$vRow_next['no_ticket'];	
+	$transaction=$vRow_next['nama_layanan'];
+	$waktu_ambil=$vRow_next['waktu_ambil'];
+
+	$ct_id_lay=$this->db->query("Select tanggal_transaksi,no_ticket,group_layanan.nama_group_layanan,waktu_panggil,id_layanan,transaksi.id_group_layanan from transaksi inner join group_layanan ON transaksi.id_group_layanan=group_layanan.id_group_layanan where status_transaksi='2' and id_loket='$Loket' and tanggal_transaksi='$tanggal_transaksi'order by id_transaksi desc ");
+	$_countmk3 = $ct_id_lay->row_array(); 
+
+	$ct_id_skip=$this->db->query("Select id_transaksi from transaksi where status_transaksi='2' and tanggal_transaksi='$tanggal_transaksi'order by id_transaksi asc ");
+	$id_skip = $ct_id_skip->row_array(); 
+	$skip_id=$id_skip['id_transaksi'];
+		
+  $sql=$this->db->query("INSERT INTO transaksi (tanggal_transaksi,waktu_ambil,no_ticket,id_layanan,id_group_layanan,status_transaksi) 
+		  VALUES ('$_countmk3[tanggal_transaksi]', '$waktu_panggil','$_countmk3[no_ticket]', '1','1','0')");
+  
+  $sql=$this->db->query("UPDATE transaksi set  status_transaksi='5' where no_ticket='$_countmk3[no_ticket]' and id_loket='$Loket' and tanggal_transaksi='$tanggal_transaksi' ");
+	}
+	
+
+	function fnforward2() {
+		
+	$tanggal_transaksi=date('Ymd');
+	$waktu_panggil=date("H:i:s");
+	
+	$GroupLayanan= $this->session->userdata('sIdGroupLayanan');		
+	$Loket= $this->session->userdata('sIdLoket');	
+
+	$cal_next=$this->db->query("Select id_transaksi,no_ticket,nama_layanan,waktu_ambil from transaksi as a left join layanan as b ON a.id_layanan=b.id_layanan where status_transaksi='0' and a.id_group_layanan='$GroupLayanan' and tanggal_transaksi='$tanggal_transaksi'order by id_transaksi asc  ");
+	$vRow_next = $cal_next->row_array(); 
+	$id_transaksi=$vRow_next['id_transaksi'];
+	$next_id=$vRow_next['no_ticket'];	
+	$transaction=$vRow_next['nama_layanan'];
+	$waktu_ambil=$vRow_next['waktu_ambil'];
+
+	$ct_id_lay=$this->db->query("Select tanggal_transaksi,no_ticket,group_layanan.nama_group_layanan,waktu_panggil,id_layanan,transaksi.id_group_layanan from transaksi inner join group_layanan ON transaksi.id_group_layanan=group_layanan.id_group_layanan where status_transaksi='2' and id_loket='$Loket' and tanggal_transaksi='$tanggal_transaksi'order by id_transaksi desc ");
+	$_countmk3 = $ct_id_lay->row_array(); 
+
+	$ct_id_skip=$this->db->query("Select id_transaksi from transaksi where status_transaksi='2' and tanggal_transaksi='$tanggal_transaksi'order by id_transaksi asc ");
+	$id_skip = $ct_id_skip->row_array(); 
+	$skip_id=$id_skip['id_transaksi'];
+
+  $sql=$this->db->query("INSERT INTO transaksi (tanggal_transaksi,waktu_ambil,no_ticket,id_layanan,id_group_layanan,status_transaksi) 
+  VALUES ('$_countmk3[tanggal_transaksi]', '$waktu_panggil','$_countmk3[no_ticket]', '2','2','0')");
+
+  $sql=$this->db->query("UPDATE transaksi set  status_transaksi='5' where no_ticket='$_countmk3[no_ticket]' and id_loket='$Loket' and tanggal_transaksi='$tanggal_transaksi' ");
+	}
+	
+	function fnforward3() {
+		
+	$tanggal_transaksi=date('Ymd');
+	$waktu_panggil=date("H:i:s");
+	
+	$GroupLayanan= $this->session->userdata('sIdGroupLayanan');		
+	$Loket= $this->session->userdata('sIdLoket');	
+
+	$cal_next=$this->db->query("Select id_transaksi,no_ticket,nama_layanan,waktu_ambil from transaksi as a left join layanan as b ON a.id_layanan=b.id_layanan where status_transaksi='0' and a.id_group_layanan='$GroupLayanan' and tanggal_transaksi='$tanggal_transaksi'order by id_transaksi asc  ");
+	$vRow_next = $cal_next->row_array(); 
+	$id_transaksi=$vRow_next['id_transaksi'];
+	$next_id=$vRow_next['no_ticket'];	
+	$transaction=$vRow_next['nama_layanan'];
+	$waktu_ambil=$vRow_next['waktu_ambil'];
+
+	$ct_id_lay=$this->db->query("Select tanggal_transaksi,no_ticket,group_layanan.nama_group_layanan,waktu_panggil,id_layanan,transaksi.id_group_layanan from transaksi inner join group_layanan ON transaksi.id_group_layanan=group_layanan.id_group_layanan where status_transaksi='2' and id_loket='$Loket' and tanggal_transaksi='$tanggal_transaksi'order by id_transaksi desc ");
+	$_countmk3 = $ct_id_lay->row_array(); 
+
+	$ct_id_skip=$this->db->query("Select id_transaksi from transaksi where status_transaksi='2' and tanggal_transaksi='$tanggal_transaksi'order by id_transaksi asc ");
+	$id_skip = $ct_id_skip->row_array(); 
+	$skip_id=$id_skip['id_transaksi'];
+
+   $sql=$this->db->query("INSERT INTO transaksi (tanggal_transaksi,waktu_ambil,no_ticket,id_layanan,id_group_layanan,status_transaksi) 
+   VALUES ('$_countmk3[tanggal_transaksi]', '$waktu_panggil','$_countmk3[no_ticket]', '3','2','0')");
+
+   $sql=$this->db->query("UPDATE transaksi set  status_transaksi='5' where no_ticket='$_countmk3[no_ticket]' and id_loket='$Loket' and tanggal_transaksi='$tanggal_transaksi' ");
+
+
+	}		
+
+	function fnforward4() {
+		
+	$tanggal_transaksi=date('Ymd');
+	$waktu_panggil=date("H:i:s");
+	
+	$GroupLayanan= $this->session->userdata('sIdGroupLayanan');		
+	$Loket= $this->session->userdata('sIdLoket');	
+
+	$cal_next=$this->db->query("Select id_transaksi,no_ticket,nama_layanan,waktu_ambil from transaksi as a left join layanan as b ON a.id_layanan=b.id_layanan where status_transaksi='0' and a.id_group_layanan='$GroupLayanan' and tanggal_transaksi='$tanggal_transaksi'order by id_transaksi asc  ");
+	$vRow_next = $cal_next->row_array(); 
+	$id_transaksi=$vRow_next['id_transaksi'];
+	$next_id=$vRow_next['no_ticket'];	
+	$transaction=$vRow_next['nama_layanan'];
+	$waktu_ambil=$vRow_next['waktu_ambil'];
+
+	$ct_id_lay=$this->db->query("Select tanggal_transaksi,no_ticket,group_layanan.nama_group_layanan,waktu_panggil,id_layanan,transaksi.id_group_layanan from transaksi inner join group_layanan ON transaksi.id_group_layanan=group_layanan.id_group_layanan where status_transaksi='2' and id_loket='$Loket' and tanggal_transaksi='$tanggal_transaksi'order by id_transaksi desc ");
+	$_countmk3 = $ct_id_lay->row_array(); 
+
+	$ct_id_skip=$this->db->query("Select id_transaksi from transaksi where status_transaksi='2' and tanggal_transaksi='$tanggal_transaksi'order by id_transaksi asc ");
+	$id_skip = $ct_id_skip->row_array(); 
+	$skip_id=$id_skip['id_transaksi'];
+
+  $sql=$this->db->query("INSERT INTO transaksi (tanggal_transaksi,waktu_ambil,no_ticket,id_layanan,id_group_layanan,status_transaksi) 
+  VALUES ('$_countmk3[tanggal_transaksi]', '$waktu_panggil','$_countmk3[no_ticket]', '4','3','0')");
+  $sql=$this->db->query("UPDATE transaksi set  status_transaksi='5' where no_ticket='$_countmk3[no_ticket]' and id_loket='$Loket' and tanggal_transaksi='$tanggal_transaksi'");
+
+
+	}		
+
+	function fnforward5() {
+		
+	$tanggal_transaksi=date('Ymd');
+	$waktu_panggil=date("H:i:s");
+	
+	$GroupLayanan= $this->session->userdata('sIdGroupLayanan');		
+	$Loket= $this->session->userdata('sIdLoket');	
+
+	$cal_next=$this->db->query("Select id_transaksi,no_ticket,nama_layanan,waktu_ambil from transaksi as a left join layanan as b ON a.id_layanan=b.id_layanan where status_transaksi='0' and a.id_group_layanan='$GroupLayanan' and tanggal_transaksi='$tanggal_transaksi'order by id_transaksi asc  ");
+	$vRow_next = $cal_next->row_array(); 
+	$id_transaksi=$vRow_next['id_transaksi'];
+	$next_id=$vRow_next['no_ticket'];	
+	$transaction=$vRow_next['nama_layanan'];
+	$waktu_ambil=$vRow_next['waktu_ambil'];
+
+	$ct_id_lay=$this->db->query("Select tanggal_transaksi,no_ticket,group_layanan.nama_group_layanan,waktu_panggil,id_layanan,transaksi.id_group_layanan from transaksi inner join group_layanan ON transaksi.id_group_layanan=group_layanan.id_group_layanan where status_transaksi='2' and id_loket='$Loket' and tanggal_transaksi='$tanggal_transaksi'order by id_transaksi desc ");
+	$_countmk3 = $ct_id_lay->row_array(); 
+
+	$ct_id_skip=$this->db->query("Select id_transaksi from transaksi where status_transaksi='2' and tanggal_transaksi='$tanggal_transaksi'order by id_transaksi asc ");
+	$id_skip = $ct_id_skip->row_array(); 
+	$skip_id=$id_skip['id_transaksi'];
+
+  $sql=$this->db->query("INSERT INTO transaksi (tanggal_transaksi,waktu_ambil,no_ticket,id_layanan,id_group_layanan,status_transaksi) 
+  VALUES ('$_countmk3[tanggal_transaksi]', '$waktu_panggil','$_countmk3[no_ticket]', '5','4','0')");
+  $sql=$this->db->query("UPDATE transaksi set  status_transaksi='5' where no_ticket='$_countmk3[no_ticket]' and id_loket='$Loket' and tanggal_transaksi='$tanggal_transaksi'");
+
+	}		
+
+	function fnforward6() {
+		
+	$tanggal_transaksi=date('Ymd');
+	$waktu_panggil=date("H:i:s");
+	
+	$GroupLayanan= $this->session->userdata('sIdGroupLayanan');		
+	$Loket= $this->session->userdata('sIdLoket');	
+
+	$cal_next=$this->db->query("Select id_transaksi,no_ticket,nama_layanan,waktu_ambil from transaksi as a left join layanan as b ON a.id_layanan=b.id_layanan where status_transaksi='0' and a.id_group_layanan='$GroupLayanan' and tanggal_transaksi='$tanggal_transaksi'order by id_transaksi asc  ");
+	$vRow_next = $cal_next->row_array(); 
+	$id_transaksi=$vRow_next['id_transaksi'];
+	$next_id=$vRow_next['no_ticket'];	
+	$transaction=$vRow_next['nama_layanan'];
+	$waktu_ambil=$vRow_next['waktu_ambil'];
+
+	$ct_id_lay=$this->db->query("Select tanggal_transaksi,no_ticket,group_layanan.nama_group_layanan,waktu_panggil,id_layanan,transaksi.id_group_layanan from transaksi inner join group_layanan ON transaksi.id_group_layanan=group_layanan.id_group_layanan where status_transaksi='2' and id_loket='$Loket' and tanggal_transaksi='$tanggal_transaksi'order by id_transaksi desc ");
+	$_countmk3 = $ct_id_lay->row_array(); 
+
+	$ct_id_skip=$this->db->query("Select id_transaksi from transaksi where status_transaksi='2' and tanggal_transaksi='$tanggal_transaksi'order by id_transaksi asc ");
+	$id_skip = $ct_id_skip->row_array(); 
+	$skip_id=$id_skip['id_transaksi'];
+
+ $sql=$this->db->query("INSERT INTO transaksi (tanggal_transaksi,waktu_ambil,no_ticket,id_layanan,id_group_layanan,status_transaksi) 
+  VALUES ('$_countmk3[tanggal_transaksi]', '$waktu_panggil','$_countmk3[no_ticket]', '6','4','0')");
+ $sql=$this->db->query("UPDATE transaksi set  status_transaksi='5' where no_ticket='$_countmk3[no_ticket]' and id_loket='$Loket' and tanggal_transaksi='$tanggal_transaksi'");
+
+	}		
+	
+	function fnCreatecounter($pData) {
+		$vData = array(
+	
+		   
+			'id'=>$pData['vid'],					
+           
+		);
+		$vResult = $this->db->insert('t_counter',$vData);
+		if($vResult) {
+			echo json_encode(array('success'=>true));
+		} else {
+			echo json_encode(array('msg'=>'Some errors occured.'));
+		}
+	}
+	
+	function fncounterDelete($pDelcounterId) {
+		
+		$vResult = $this->db->where('id',$pDelcounterId)->delete('t_counter');
+	
+		
+		if($vResult) {
+			echo json_encode(array('success'=>true));
+		} else {
+			echo json_encode(array('msg'=>'Some errors occured.'));
+		}
+	}
+	
+	function fncounterRow($pcounterId) {
+	
+		$this->db->where('id',$pcounterId);
+		
+		$vResult = $this->db->get(t_counter)->result();
+		$vRow = $vResult[0];
+           
+			$vArrayTemp['id'] = $vRow->id;
+           		
+		
+		echo json_encode($vArrayTemp);
+		
+	}	
+
+	function fnUpdatecounter($pcounterId,$pData) {
+		$vData = array(
+		
+		   
+			'id'=>$pData['vid'],					
+           			
+		);
+	
+		$vResult = $this->db->where('id',$pcounterId)->update('t_counter',$vData);
+	
+		
+		if($vResult) {
+			echo json_encode(array('success'=>true));
+		} else {
+			echo json_encode(array('msg'=>'Some errors occured.'));
+		}
+	}
+	
+}
+?>
+

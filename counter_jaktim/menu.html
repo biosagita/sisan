@@ -1,0 +1,41 @@
+
+<link href="../css/dropdown/dropdown.vertical.css" media="all" rel="stylesheet" type="text/css" />
+<link href="../css/dropdown/themes/default/default.ultimate.css" media="all" rel="stylesheet" type="text/css" />
+
+<!--[if lt IE 7]>
+<script type="text/javascript" src="js/jquery/jquery.js"></script>
+<script type="text/javascript" src="js/jquery/jquery.dropdown.js"></script>
+<![endif]-->
+
+</head>
+<div style="height:100;
+			font-size:15px; 
+			weight:Bold; 
+			text-align=center; 
+			margin-left:auto;
+			margin-right:auto;
+			width:50%;
+			padding:10px 10px 10px 10px;" >
+			<img src='../images/logo.png' width=100px height=100px >
+			</div>
+<div id=title_company_menu>
+			Imigrasi
+			</div>
+
+<div>
+<ul id="nav" class="dropdown dropdown-vertical">
+	<li><a href="javascript:void(0);" onclick="PopupCenter('visitor_reg.php?r=next', 'myPop1',400,300);"  ><img src='../images/next.png' width=20 height=20 >&nbsp;&nbsp;Next</a>
+	<li><? print"<a href='http:proses.php?proses=recall'  id='btnrecall' ><img src='../images/undo.png' width=20 height=20 >&nbsp;&nbsp;Recall</a>"; ?>
+	<li><? print"<a href='http:proses.php?proses=skip'  id='btnskip' ><img src='../images/skip.png' width=20 height=20 >&nbsp;&nbsp;Skip</a>";  ?> 
+	<li><? print"<a href='http:proses.php?proses=forward'  id='btnShowModal'><img src='../images/forward.png' width=20 height=20 >&nbsp;&nbsp;Forward</a>"; ?> 
+	<li><a href="javascript:void(0);" onclick="PopupCenter('request_visitor.php?r=request', 'myPop1',400,300);"  ><img src='../images/request.png' width=20 height=20 >&nbsp;&nbsp;Request</a>
+
+	<li><? print"<a href='http:logout.php'><img src='../images/logout.png' width=20 height=20 >&nbsp;&nbsp;Logout</a>"; ?> 
+
+</ul>
+</div>
+
+<div id="divjam"></div>
+<div id=title_company_menu >SisAn V.2.0</div>
+
+

@@ -1,0 +1,5 @@
+{"total":20,"rows":[
+	{"f_document_id":1,"f_document_name":"Copy STNK","f_claim_type":"Partial Loss","f_send_date":"01/01/2013","f_claim_date":"03/01/2013","f_completed_days":"","f_estimate_plan":"","f_estimate_start":"","f_completed_date":"","f_vehicle_reg_no":"B 1231 AC","f_estimate_by":"","f_claim_user":"Assa Admin 1","f_estimate_days":"","f_claim_status":"2"},
+	{"f_document_id":3,"f_document_name":"Copy SIM","f_claim_type":"Partial Loss","f_send_date":"29/12/2012","f_claim_date":"01/01/2013","f_completed_days":"","f_estimate_plan":"02/01/2013","f_estimate_start":"","f_completed_date":"","f_vehicle_reg_no":"B 1123 FA","f_estimate_by":"Bengkel Auto Dinamika","f_claim_user":"Assa Admin 3","f_estimate_days":"","f_claim_status":"2"},
+	{"f_document_id":2,"f_document_name":"Copy Keterangan Polisi","f_claim_type":"Partial Loss","f_send_date":"","f_claim_date":"02/01/2013","f_completed_days":"","f_estimate_plan":"03/01/2013","f_estimate_start":"","f_completed_date":"","f_vehicle_reg_no":"B 1421 DS","f_estimate_by":"Bengkel Makmur Jaya","f_claim_user":"Assa Admin 1","f_estimate_days":"","f_claim_status":"1"}
+]}
