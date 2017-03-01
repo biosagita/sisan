@@ -212,6 +212,9 @@ function fnFinish() {
 }
 
 function fnForward(id_layanan, id_group_layanan) {
+	var cfm = confirm('Forward layanan ini?');
+	if(!cfm) return false;
+	
 	$.ajax({
 		type: 'POST',
 		url: '<?php echo base_url()?>index.php/md_counter/fnForward',
